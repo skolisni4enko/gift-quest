@@ -43,10 +43,6 @@ jobs:
           sed -i "s|APP_ENV=local|APP_ENV=production|g" .env
           sed -i "s|APP_DEBUG=true|APP_DEBUG=false|g" .env
           sed -i "s|APP_URL=http://localhost|APP_URL=${{ secrets.APP_URL }}|g" .env
-          sed -i "s|DB_HOST=127.0.0.1|DB_HOST=${{ secrets.DB_HOST }}|g" .env
-          sed -i "s|DB_DATABASE=gift_quest|DB_DATABASE=${{ secrets.DB_DATABASE }}|g" .env
-          sed -i "s|DB_USERNAME=root|DB_USERNAME=${{ secrets.DB_USERNAME }}|g" .env
-          sed -i "s|DB_PASSWORD=|DB_PASSWORD=${{ secrets.DB_PASSWORD }}|g" .env
           # Quest-specific secrets
           sed -i "s|QUEST_LOGIN=|QUEST_LOGIN=${{ secrets.QUEST_LOGIN }}|g" .env
           sed -i "s|QUEST_PASSWORD=|QUEST_PASSWORD=${{ secrets.QUEST_PASSWORD }}|g" .env
