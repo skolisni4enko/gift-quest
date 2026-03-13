@@ -50,13 +50,7 @@
         <p class="text-center text-gray-400 text-xs mt-10">
             {{ __('quest.access.hint') }}
         </p>
-
-        <!-- Language Switcher -->
-        <div class="mt-8 flex justify-center space-x-4">
-            <a href="/lang/en" class="px-3 py-1 rounded-full text-xs font-bold transition-all {{ app()->getLocale() === 'en' ? 'bg-rose-500 text-white shadow-lg' : 'bg-white/50 text-gray-500 hover:bg-white' }}">EN</a>
-            <a href="/lang/uk" class="px-3 py-1 rounded-full text-xs font-bold transition-all {{ app()->getLocale() === 'uk' ? 'bg-rose-500 text-white shadow-lg' : 'bg-white/50 text-gray-500 hover:bg-white' }}">UA</a>
-            <a href="/lang/ru" class="px-3 py-1 rounded-full text-xs font-bold transition-all {{ app()->getLocale() === 'ru' ? 'bg-rose-500 text-white shadow-lg' : 'bg-white/50 text-gray-500 hover:bg-white' }}">RU</a>
-        </div>
     </div>
+    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

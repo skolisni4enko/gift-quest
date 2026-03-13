@@ -23,5 +23,27 @@ return [
         'present_title' => 'Your Present',
         'present_desc' => 'Finish the quest above to unlock the secret location of your birthday gift!',
         'logout' => 'Logout 👋',
+        'cards' => [
+            'step1' => [
+                'title' => 'Step 1: Your Age',
+                'description' => 'To begin, prove its you. How old are you today?',
+                'placeholder' => '00',
+                'button' => 'Check',
+                'success' => 'Correct! Open the secret page to find the key for the next step.',
+                'link' => 'Open Secret Page 🎁',
+            ],
+            'step2' => [
+                'title' => 'Step 2: Secret Word',
+                'description' => 'Enter the word you found on the secret page.',
+                'placeholder' => 'Enter word...',
+                'button' => 'Confirm',
+            ],
+            'step3' => [
+                'title' => 'Step 3: Final Code',
+                'description' => 'Final stretch! Enter the code to unlock your gift.',
+                'placeholder' => 'Code...',
+                'button' => 'Unlock Gift!',
+            ],
+        ],
     ],
 ];

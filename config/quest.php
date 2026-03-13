@@ -27,4 +27,18 @@ return [
         'music/drb9.mp3',
         'music/drb11.mp3',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Quest State & Answers
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for the interactive cards game.
+    |
+    */
+    'answers' => [
+        'age' => env('QUEST_AGE', '25'),
+        'text' => env('QUEST_TEXT', 'MEMORY'),
+        'code' => env('QUEST_CODE', 'CAKE'),
+    ],
 ];

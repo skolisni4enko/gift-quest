@@ -3,23 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birthday Quest | Celebration</title>
+    <title>{{ __('quest.quest.hero_title') }} | Birthday Quest</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
-<body class="min-h-screen bg-gradient-to-tr from-rose-100 via-pink-100 to-purple-100 text-gray-800 pb-20">
+<body class="min-h-screen bg-gradient-to-tr from-rose-100 via-pink-100 to-purple-100 text-gray-800 pb-20 overflow-x-hidden">
 
     <!-- Navbar Controls -->
-    <div id="nav-controls" class="fixed top-6 left-6 right-6 z-50 hidden flex justify-between items-center">
+    <div id="nav-controls" class="fixed top-6 left-6 right-6 z-50 flex justify-between items-center">
         <div class="flex items-center space-x-4">
-            <div class="flex items-center space-x-2">
-                <a href="/lang/en" class="px-2 py-1 rounded-md text-[10px] font-bold transition-all {{ app()->getLocale() === 'en' ? 'bg-rose-500 text-white shadow-sm' : 'bg-white/50 text-gray-500 hover:bg-white' }}">EN</a>
-                <a href="/lang/uk" class="px-2 py-1 rounded-md text-[10px] font-bold transition-all {{ app()->getLocale() === 'uk' ? 'bg-rose-500 text-white shadow-sm' : 'bg-white/50 text-gray-500 hover:bg-white' }}">UA</a>
-                <a href="/lang/ru" class="px-2 py-1 rounded-md text-[10px] font-bold transition-all {{ app()->getLocale() === 'ru' ? 'bg-rose-500 text-white shadow-sm' : 'bg-white/50 text-gray-500 hover:bg-white' }}">RU</a>
-            </div>
-            <!-- Logout Button -->
             <form action="/logout" method="POST">
                 @csrf
                 <button type="submit" class="glass px-4 py-2 rounded-full shadow-lg text-sm font-bold text-gray-500 hover:text-rose-500 hover:bg-white/60 transition-all duration-300">
@@ -33,6 +27,7 @@
     </div>
 
     <!-- Start Overlay -->
+    @if(!session('quest_started'))
     <div id="start-overlay" class="fixed inset-0 z-[100] glass flex items-center justify-center text-center p-6 transition-opacity duration-1000">
         <div class="max-w-md">
             <span class="text-7xl block mb-6 animate-bounce">🎈</span>
@@ -44,9 +39,10 @@
             </button>
         </div>
     </div>
+    @endif
 
     <!-- Main Content -->
-    <main class="max-w-4xl mx-auto pt-24 px-6 space-y-10">
+    <main class="max-w-4xl mx-auto pt-24 px-6 space-y-16">
         <!-- Hero Section -->
         <section class="text-center space-y-4">
             <h1 class="text-5xl md:text-7xl font-extrabold pb-2">
@@ -58,36 +54,100 @@
             </p>
         </section>
 
-        <!-- Placeholder for the Quest Game -->
-        <section class="glass rounded-[3rem] p-1 shadow-2xl overflow-hidden aspect-video md:aspect-[16/9] relative">
-            <div class="absolute inset-0 flex flex-col items-center justify-center bg-white/30 backdrop-blur-sm">
-                <span class="text-6xl mb-4">🎮</span>
-                <p class="text-gray-600 font-medium text-lg">{{ __('quest.quest.game_placeholder') }}</p>
-                <p class="text-gray-400 text-sm italic">{{ __('quest.quest.game_hint') }}</p>
+        <!-- Quest Steps -->
+        <div class="grid gap-10">
+            <!-- Card 1: Age Lock -->
+            <section id="step-1" class="glass rounded-[3rem] p-10 shadow-2xl transition-all duration-500 relative overflow-hidden">
+                <div class="flex flex-col md:flex-row items-center gap-8 relative z-10">
+                    <div class="w-24 h-24 bg-rose-100 rounded-3xl flex items-center justify-center text-5xl shadow-inner shrink-0">🎂</div>
+                    <div class="flex-1 text-center md:text-left space-y-4">
+                        <h3 class="text-3xl font-bold">{{ __('quest.quest.cards.step1.title') }}</h3>
+                        <p class="text-gray-600 text-lg">{{ __('quest.quest.cards.step1.description') }}</p>
+                        
+                        <div id="step-1-form" class="flex flex-col sm:flex-row gap-4 mt-6">
+                            <input type="number" id="age-input" placeholder="{{ __('quest.quest.cards.step1.placeholder') }}" 
+                                   class="px-8 py-4 rounded-2xl bg-white/50 border-none shadow-xl focus:ring-4 focus:ring-rose-300 text-2xl font-bold text-center w-full sm:w-32 outline-none">
+                            <button onclick="checkStep1()" class="px-8 py-4 bg-rose-500 text-white rounded-2xl font-bold text-xl shadow-lg hover:bg-rose-600 hover:scale-105 active:scale-95 transition-all">
+                                {{ __('quest.quest.cards.step1.button') }}
+                            </button>
+                        </div>
+
+                        <div id="step-1-success" class="hidden space-y-4 animate-in fade-in duration-700">
+                            <p class="text-green-600 font-bold text-xl">✅ {{ __('quest.quest.cards.step1.success') }}</p>
+                            <a href="/secret" target="_blank" class="inline-block px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-2xl font-bold text-xl shadow-xl hover:scale-105 transition-all">
+                                {{ __('quest.quest.cards.step1.link') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Card 2: Secret Word -->
+            <section id="step-2" class="glass rounded-[3rem] p-10 shadow-2xl transition-all duration-500 card-locked relative overflow-hidden">
+                <div class="flex flex-col md:flex-row items-center gap-8 relative z-10">
+                    <div class="w-24 h-24 bg-purple-100 rounded-3xl flex items-center justify-center text-5xl shadow-inner shrink-0">🔍</div>
+                    <div class="flex-1 text-center md:text-left space-y-4">
+                        <h3 class="text-3xl font-bold">{{ __('quest.quest.cards.step2.title') }}</h3>
+                        <p class="text-gray-600 text-lg">{{ __('quest.quest.cards.step2.description') }}</p>
+                        
+                        <div id="step-2-form" class="flex flex-col sm:flex-row gap-4 mt-6">
+                            <input type="text" id="text-input" placeholder="{{ __('quest.quest.cards.step2.placeholder') }}" 
+                                   class="px-8 py-4 rounded-2xl bg-white/50 border-none shadow-xl focus:ring-4 focus:ring-purple-300 text-xl font-bold uppercase w-full sm:w-64 outline-none">
+                            <button onclick="checkStep2()" class="px-8 py-4 bg-purple-500 text-white rounded-2xl font-bold text-xl shadow-lg hover:bg-purple-600 hover:scale-105 active:scale-95 transition-all">
+                                {{ __('quest.quest.cards.step2.button') }}
+                            </button>
+                        </div>
+                        <div id="step-2-success" class="hidden space-y-4 animate-in fade-in duration-700">
+                            <p class="text-green-600 font-bold text-xl">✅ Awesome! The final step is unlocked.</p>
+                            <div class="bg-purple-50 p-6 rounded-2xl border-2 border-dashed border-purple-200">
+                                <p class="text-purple-800 font-semibold italic text-lg">
+                                    "Sweet and delicious, usually with candles..." 🕯️
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Card 3: Final Code -->
+            <section id="step-3" class="glass rounded-[3rem] p-10 shadow-2xl transition-all duration-500 card-locked relative overflow-hidden">
+                <div class="flex flex-col md:flex-row items-center gap-8 relative z-10">
+                    <div class="w-24 h-24 bg-yellow-100 rounded-3xl flex items-center justify-center text-5xl shadow-inner shrink-0">🎁</div>
+                    <div class="flex-1 text-center md:text-left space-y-4">
+                        <h3 class="text-3xl font-bold">{{ __('quest.quest.cards.step3.title') }}</h3>
+                        <p class="text-gray-600 text-lg">{{ __('quest.quest.cards.step3.description') }}</p>
+                        
+                        <div id="step-3-form" class="flex flex-col sm:flex-row gap-4 mt-6">
+                            <input type="text" id="code-input" placeholder="{{ __('quest.quest.cards.step3.placeholder') }}" 
+                                   class="px-8 py-4 rounded-2xl bg-white/50 border-none shadow-xl focus:ring-4 focus:ring-yellow-300 text-xl font-bold uppercase w-full sm:w-64 outline-none">
+                            <button onclick="checkStep3()" class="px-8 py-4 bg-yellow-500 text-white rounded-2xl font-bold text-xl shadow-lg hover:bg-yellow-600 hover:scale-105 active:scale-95 transition-all">
+                                {{ __('quest.quest.cards.step3.button') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Reward Section (Initially Hidden) -->
+        <section id="reward" class="hidden text-center space-y-8 py-20 animate-in zoom-in duration-1000">
+            <div class="w-48 h-48 bg-white rounded-full flex items-center justify-center text-9xl shadow-2xl mx-auto float">🎀</div>
+            <h2 class="text-5xl font-black text-rose-600">{{ __('quest.quest.present_title') }}</h2>
+            <p class="text-2xl text-gray-700 max-w-2xl mx-auto">
+                {{ __('quest.quest.present_desc') }}
+            </p>
+            <div class="p-10 glass rounded-[4rem] text-4xl font-bold text-gray-800 shadow-inner inline-block">
+                📍 UNDER THE BED!
             </div>
         </section>
-
-        <!-- Content Cards -->
-        <div class="grid md:grid-cols-2 gap-8">
-            <div class="glass rounded-[2rem] p-10 shadow-xl space-y-4">
-                <div class="w-16 h-16 bg-rose-100 rounded-2xl flex items-center justify-center text-3xl shadow-inner">📸</div>
-                <h3 class="text-2xl font-bold">{{ __('quest.quest.moments_title') }}</h3>
-                <p class="text-gray-600 leading-relaxed text-lg">{{ __('quest.quest.moments_desc') }}</p>
-            </div>
-            <div class="glass rounded-[2rem] p-10 shadow-xl space-y-4">
-                <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center text-3xl shadow-inner">🎁</div>
-                <h3 class="text-2xl font-bold">{{ __('quest.quest.present_title') }}</h3>
-                <p class="text-gray-600 leading-relaxed text-lg">{{ __('quest.quest.present_desc') }}</p>
-            </div>
-        </div>
     </main>
 
     <!-- Background Music -->
-    @php
-        $tracks = collect(config('quest.music'))->map(fn($t) => asset($t))->toJson();
-    @endphp
-    <audio id="bg-music" data-tracks='{{ $tracks }}'></audio>
+    <audio id="bg-music" data-tracks="{{ $tracks->toJson() }}"></audio>
 
+    <script>
+        window.ANSWERS = @json($answers);
+    </script>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>
